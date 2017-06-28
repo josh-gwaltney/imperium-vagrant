@@ -1,0 +1,12 @@
+---
+- hosts: mongodb
+  gather_facts: no
+  become: true
+  become_method: sudo
+
+  tasks:
+
+    - name: install mongodb
+      apt:
+        name:
+        state:

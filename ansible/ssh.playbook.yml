@@ -1,0 +1,13 @@
+---
+- hosts: all
+  gather_facts: no
+  remote_user: ubuntu
+  become: true
+  become_method: sudo
+
+  tasks:
+
+  - name: install ssh key
+    authorized_key: user=ubuntu
+      key="{{ lookup('file', '/home/vagrant/.ssh/id_rsa.pub') }}"
+      state=present

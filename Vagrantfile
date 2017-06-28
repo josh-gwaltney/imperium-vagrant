@@ -9,22 +9,41 @@ CONFIG = [
   { '--cpus' => '1' }
 ]
 
+NETWORK = {
+ :type => 'private_network',
+ :bridge => 'VirtualBox Host-Only Ethernet Adapter'
+}
+
+PROVISION_SCRIPT = 'provision.sh'
+
 MACHINES = [
   {
     :name => 'web',
-    :ip => '192.168.59.140'
+    :ip => '192.168.59.140',
+    :folders => [
+      { 'web' => '/home/ubuntu/web' }
+    ]
   },
   {
     :name => 'api',
-    :ip => '192.168.59.141'
+    :ip => '192.168.59.141',
+    :folders => [
+
+    ]
   },
   {
-    :name => 'mongo',
-    :ip => '192.168.59.142'
+    :name => 'mongodb',
+    :ip => '192.168.59.142',
+    :folders => [
+
+    ]
   },
   {
     :name => 'ansible',
-    :ip => '192.168.59.143'
+    :ip => '192.168.59.143',
+    :folders => [
+        { 'ansible' => '/home/ubuntu/ansible' }
+    ]
   }
 ]
 
@@ -33,7 +52,7 @@ Vagrant.configure(API_VERSION) do |config|
     config.vm.define opts[:name] do |config|
       config.vm.box = UBUNTU
       config.vm.hostname = opts[:name]
-      config.vm.network 'private_network', bridge: 'VirtualBox Host-Only Ethernet Adapter', ip: opts[:ip]
+      config.vm.network NETWORK[:type], bridge: NETWORK[:bridge], ip: opts[:ip]
       config.vm.provider 'virtualbox' do |vb|
         CONFIG.each do |hash|
           hash.each do |key, value|
@@ -41,14 +60,13 @@ Vagrant.configure(API_VERSION) do |config|
           end
         end
       end
-      # opts[:synced_folders].each do |hash|
-      #   hash.each do |folder1, folder2|
-      #     config.vm.synced_folder folder1, folder2
-      #   end
-      # end
-      # opts[:provision].each do |script|
-      #   config.vm.provision :shell, path: script
-      # end
+      config.vm.synced_folder ".", "/vagrant", disabled: true
+      opts[:folders].each do |hash|
+        hash.each do |folder1, folder2|
+          config.vm.synced_folder folder1, folder2
+        end
+      end
+      config.vm.provision :shell, path: PROVISION_SCRIPT
     end
   end
 end
