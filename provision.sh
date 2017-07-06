@@ -7,7 +7,6 @@ apt-get -y upgrade
 #chmod 600 /home/ubuntu/.ssh/*
 
 cat >> /etc/hosts <<EOL
-
 192.168.59.140 web
 192.168.59.141 api
 192.168.59.142 mongo

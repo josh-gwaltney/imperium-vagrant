@@ -21,14 +21,16 @@ MACHINES = [
     :name => 'web',
     :ip => '192.168.59.140',
     :folders => [
-      { 'web' => '/home/ubuntu/web' }
+      { '../web' => '/home/ubuntu/web' },
+      { '../shared/src' => '/home/ubuntu/web/shared' }
     ]
   },
   {
     :name => 'api',
     :ip => '192.168.59.141',
     :folders => [
-
+      { '../api' => '/home/ubuntu/api' },
+      { '../shared/src' => '/home/ubuntu/web/shared' }
     ]
   },
   {
